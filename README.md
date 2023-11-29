@@ -55,9 +55,13 @@ wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/003/113/815/GCA_003113815.1_AS
 Now that all the dataset was downloaded, the files needed to unzipped. The command I used was this: 
 
 for i in final_project
+
 do 
+
 gzip -d GC*
+
 echo GC*
+
 done
 
 Now that everything as been unzipped, it had to be unwrapped since they were not all on one line. Here is the script that I used to do that
@@ -82,4 +86,88 @@ awk '{if(NR==1) {print $0} else {if($0 ~ /^>/) {print "\n"$0} else {printf $0}}}
 awk '{if(NR==1) {print $0} else {if($0 ~ /^>/) {print "\n"$0} else {printf $0}}}' GCA_003113815.1_ASM311381v1_genomic.fna > Tuatara.unwrapped.fna
 done
 
-After completing this, the sequences that the gene that I wanted need to be pulled out
+After completing this, the sequences that hold the gene need to be taken out. Here is how it was done: 
+
+For i in final_project
+do
+
+grep -o “wnt2b” Tarantolino.unwrapped.fna 
+grep -o “wnt2b” Graceful_crag_lizard.unwrapped.fna
+grep -o “wnt2b” Lilfords_wall_lizard.unwrapped.fna
+grep -o “wnt2b” Plateau_fence_lizard.unwrapped.fna
+grep -o “wnt2b” Aeolian_wall_lizard.unwrapped.fna
+grep -o “wnt2b” Green_anole.unwrapped.fna
+grep -o “wnt2b” Leopard_gecko.unwrapped.fna
+grep -o “wnt2b” Tuatara.unwrapped.fna
+
+while 
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Tarantolino.unwrapped.fna > Tarantolino_wnt2b.fna
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Graceful_crag_lizard.unwrapped.fna > Graceful_crag_lizard_wnt2b.fna
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Lilfords_wall_lizard.unwrapped.fna > Lilfords_wall_lizard_wnt2b.fna
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Plateau_fence_lizard.unwrapped.fna > Plateau_fence_lizard_wnt2b.fna
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Aeolian_wall_lizard.unwrapped.fna > Aeolian_wall_lizard_wnt2b.fna
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Green_anole.unwrapped.fna > Green_anole_wnt2b.fna
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Leopard_gecko.unwrapped.fna > Leopard_gecko_wnt2b.fna
+
+awk '/^>/{print ">beaver_" ++i; next}{print}' Tuatara.unwrapped.fna > Tuatara_wnt2b.fna
+
+done
+
+Once the sequence that has the genes is taken out, I only need the headers that specifically hold the gene so to shorten it this was used: 
+
+for i in final_project
+
+do 
+
+awk '/^>/{print ">tarantolino_" ++i; next}{print}' Tarantolino_wnt2b.fna > header_Tarantolino_wnt2b.fna
+  
+
+awk '/^>/{print ">gracefulcraglizard_" ++i; next}{print}' Graceful_crag_lizard_wnt2b.fna > header_Graceful_crag_lizard_wnt2b.fna
+
+awk '/^>/{print ">lilfordswalllizard_" ++i; next}{print}' Lilfords_wall_lizard_wnt2b.fna > header_Lilfords_wall_lizard_wnt2b.fna
+
+awk '/^>/{print ">plateaufencelizard_" ++i; next}{print}' Plateau_fence_lizard_wnt2b.fna > header_Plateau_fence_lizard_wnt2b.fna
+
+awk '/^>/{print ">aeolianwalllizard_" ++i; next}{print}' Aeolian_wall_lizard_wnt2b.fna > header_Aeolian_wall_lizard_wnt2b.fna
+
+awk '/^>/{print ">greenanole_" ++i; next}{print}' Green_anole_wnt2b.fna > header_Green_anole_wnt2b.fna
+
+awk '/^>/{print ">leopardgecko_" ++i; next}{print}' Leopard_gecko_wnt2b.fna > header_Leopard_gecko_wnt2b.fna
+
+
+awk '/^>/{print ">tuatara_" ++i; next}{print}' Tuatara_wnt2b.fna > header_Tuatara_wnt2b.fna
+
+For each input, the output name was changed to give a clear indication of what the file holds. 
+Now, MAFFT will be used to align the squences to begin the final section of the phylogenetic tree building. To align this was used: 
+
+for i in final_project
+
+do 
+
+mafft --auto header_Tarantolino_wnt2b.fna > alligned_header_Tarantolino_wnt2b.fna  
+
+mafft --auto header_Graceful_crag_lizard_wnt2b.fna > alligned_header_Graceful_crag_lizard_wnt2b.fna
+
+mafft --auto header_Lilfords_wall_lizard_wnt2b.fna > alligned_header_Lilfords_wall_lizard_wnt2b.fna
+
+mafft --auto header_Plateau_fence_lizard_wnt2b.fna > alligned_header_Plateau_fence_lizard_wnt2b.fna
+
+mafft --auto header_Aeolian_wall_lizard_wnt2b.fna > alligned_header_Aeolian_wall_lizard_wnt2b.fna
+
+mafft --auto header_Green_anole_wnt2b.fna > alligned_header_Green_anole_wnt2b.fna
+
+mafft --auto header_Leopard_gecko_wnt2b.fna > alligned_header_Leopard_gecko_wnt2b.fna
+
+mafft --auto header_Leopard_gecko_wnt2b.fna > alligned_header_Leopard_gecko_wnt2b.fna
+
+mafft --auto header_Tuatara_wnt2b.fna > alligned_header_Tuatara_wnt2b.fna
+
+done
+
